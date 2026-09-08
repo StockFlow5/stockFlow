@@ -1,21 +1,22 @@
-import { Nav } from "@/components/nav";
-import { DappInterface } from "@/components/dapp-interface";
-import { Footer } from "@/components/footer";
+import type { Metadata } from "next";
+import { AppLayout } from "@/components/app-layout";
+import { DashboardContent } from "@/components/dashboard-content";
 
-export const metadata = {
-  title: "StockFlow App | Mint, Borrow, Stake",
+export const metadata: Metadata = {
+  title: "StockFlow App | Overview",
   description:
     "Deposit tokenized equities and mint sUSD, or stake into ssUSD to earn protocol revenue.",
 };
 
 export default function AppPage() {
   return (
-    <>
-      <Nav />
-      <main className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
-        <DappInterface />
-      </main>
-      <Footer />
-    </>
+    <AppLayout
+      title="Overview"
+      subtitle="Your balances, positions, and opportunities in one place."
+      kicker="Your account"
+      requiresWallet={false}
+    >
+      <DashboardContent />
+    </AppLayout>
   );
 }
