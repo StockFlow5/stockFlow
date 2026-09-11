@@ -10,6 +10,7 @@ import { AppPrompt } from "./app-prompt";
 import { WalletButton } from "./wallet-button";
 import {
   LayoutDashboard,
+  ArrowRightLeft,
   TrendingUp,
   Lock,
   DollarSign,
@@ -17,9 +18,7 @@ import {
   BarChart3,
   Sparkles,
   FileText,
-  MessageCircle,
   Code,
-  Moon,
   Menu,
   X,
 } from "lucide-react";
@@ -30,6 +29,7 @@ const nav = [
     title: "Navigation",
     items: [
       { label: "Dashboard", href: "/app/", icon: LayoutDashboard },
+      { label: "PSM", href: "/app/psm/", icon: ArrowRightLeft },
       { label: "Borrow", href: "/app/borrow/", icon: TrendingUp },
       { label: "Vaults", href: "/app/vaults/", icon: Lock },
       { label: "$SF", href: "/app/sf/", icon: DollarSign },
@@ -47,9 +47,8 @@ const nav = [
 
 const company = [
   { label: "Docs", href: "/docs", icon: FileText },
-  { label: "Discord", href: "#", icon: MessageCircle },
-  { label: "GitHub", href: "#", icon: Code },
-  { label: "X", href: "https://x.com/Stockflowfun", icon: X },
+  { label: "GitHub", href: "https://github.com/StockFlow5/app", icon: Code },
+  { label: "X", href: "https://x.com/_StockFlow", icon: X },
 ];
 
 interface AppLayoutProps {
@@ -91,19 +90,14 @@ export function AppLayout({
 
         <div className="flex flex-col gap-3">
           <WalletButton size="sm" className="w-full" variant="outline" />
-          <button
-            disabled
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-background/60 px-3 text-xs font-medium text-muted disabled:cursor-not-allowed"
-          >
-            <Moon className="h-3.5 w-3.5" />
-            Dark mode
-          </button>
           <div className="flex items-center justify-between px-1 pt-2 text-muted">
             {company.map((c) => (
               <a
                 key={c.label}
                 href={c.href}
                 aria-label={c.label}
+                target={c.href.startsWith("/") ? undefined : "_blank"}
+                rel={c.href.startsWith("/") ? undefined : "noopener noreferrer"}
                 className="rounded p-2 transition hover:bg-background/60 hover:text-foreground"
               >
                 <c.icon className="h-4 w-4" />
@@ -195,13 +189,15 @@ export function AppLayout({
 
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
           <header className="mb-8">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary">
               {kicker}
             </p>
-            <h1 className="mt-1 font-sans text-3xl font-medium tracking-tight text-foreground sm:text-4xl">
+            <h1 className="mt-1 text-balance font-sans text-3xl font-medium tracking-tight text-foreground sm:text-4xl">
               {title}
             </h1>
-            <p className="mt-2 text-muted">{subtitle}</p>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
+              {subtitle}
+            </p>
           </header>
 
           {requiresWallet && !isConnected ? (

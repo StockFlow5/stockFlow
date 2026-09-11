@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Globe, MessageCircle, Code, X } from "lucide-react";
+import { Globe, Code, X } from "lucide-react";
 
 const nav = [
   { label: "Home", href: "/" },
@@ -11,10 +11,9 @@ const nav = [
 ];
 
 const social = [
-  { label: "Docs", href: "#", icon: Globe },
-  { label: "Discord", href: "#", icon: MessageCircle },
-  { label: "GitHub", href: "#", icon: Code },
-  { label: "X", href: "https://x.com/Stockflowfun", icon: X },
+  { label: "Docs", href: "/docs", icon: Globe },
+  { label: "GitHub", href: "https://github.com/StockFlow5/app", icon: Code },
+  { label: "X", href: "https://x.com/_StockFlow", icon: X },
 ];
 
 export function Footer() {
@@ -51,6 +50,8 @@ export function Footer() {
                 key={s.label}
                 href={s.href}
                 aria-label={s.label}
+                target={s.href.startsWith("/") ? undefined : "_blank"}
+                rel={s.href.startsWith("/") ? undefined : "noopener noreferrer"}
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card/80 text-muted transition hover:border-primary/40 hover:text-foreground"
               >
                 <s.icon className="h-4 w-4" />

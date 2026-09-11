@@ -7,66 +7,42 @@ import { RecentActivity } from "@/components/recent-activity";
 import { WalletButton } from "@/components/wallet-button";
 import { ModeNote, TestnetPanel, TxStatus } from "@/components/tx-panel";
 import { useOnchain } from "@/lib/onchain";
-import type { StockSymbol } from "@/lib/contracts";
-import { TrendingUp, Activity, Shield, CheckCircle2, RefreshCcw, Info } from "lucide-react";
+import { RefreshCcw, ArrowRightLeft, Wallet, CheckCircle2, Info } from "lucide-react";
 
-const STOCKS: { symbol: StockSymbol; name: string; ltv: number; price: number }[] = [
-  { symbol: "SPYx", name: "SPDR S&P 500", ltv: 0.7, price: 550 },
-  { symbol: "QQQx", name: "Invesco QQQ", ltv: 0.7, price: 490 },
-  { symbol: "AAPLx", name: "Apple", ltv: 0.7, price: 220 },
-  { symbol: "MSFTx", name: "Microsoft", ltv: 0.7, price: 420 },
-  { symbol: "GOOGLx", name: "Alphabet", ltv: 0.7, price: 170 },
-  { symbol: "NVDAx", name: "NVIDIA", ltv: 0.7, price: 130 },
-  { symbol: "TSLAx", name: "Tesla", ltv: 0.7, price: 240 },
-];
+type Mode = "mint" | "redeem";
 
-const STOCK_WALLET_BALANCE = 10000;
-
-function healthColorClass(value: number) {
-  if (value >= 150) return "text-emerald-400";
-  if (value >= 120) return "text-amber-400";
-  return "text-rose-400";
-}
-
-export default function BorrowPage() {
+export default function PsmPage() {
   const sim = useSimulation();
   const onchain = useOnchain();
   const { live } = onchain;
-  const collateral = live ? onchain.balances.collateralValue : sim.collateral;
-  const debt = live ? onchain.balances.debt : sim.debt;
-  const { activities, borrow } = sim;
+  const usdcBalance = live ? onchain.balances.usdc : sim.usdcBalance;
+  const susdBalance = live ? onchain.balances.susd : sim.susdBalance;
+  const { activities, psmMint, psmRedeem } = sim;
+  const [mode, setMode] = useState<Mode>("mint");
   const [amount, setAmount] = useState("");
-  const [stock, setStock] = useState(STOCKS[0]);
   const [status, setStatus] = useState<"idle" | "pending" | "success">("idle");
 
-  const deposit = parseFloat(amount) || 0;
-  const depositValue = live ? deposit * stock.price : deposit;
-  const borrowAmount = depositValue * stock.ltv;
-  const newCollateral = collateral + depositValue;
-  const newDebt = debt + borrowAmount;
-  const newHealth = newDebt > 0 ? (newCollateral / newDebt) * 100 : 0;
-  const liquidationThreshold = Math.round(100 / stock.ltv);
-  const maxDeposit = live ? onchain.balances.stocks[stock.symbol] : STOCK_WALLET_BALANCE;
-  const canSubmit =
-    deposit > 0 && deposit <= maxDeposit && status !== "pending";
-
-  const healthValue = debt > 0 ? ((collateral / debt) * 100).toFixed(0) : "—";
+  const balance = mode === "mint" ? usdcBalance : susdBalance;
+  const paySymbol = mode === "mint" ? "USDC" : "sUSD";
+  const receiveSymbol = mode === "mint" ? "sUSD" : "USDC";
+  const n = parseFloat(amount) || 0;
+  const canSubmit = n > 0 && n <= balance && status !== "pending";
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
     setStatus("pending");
     if (live) {
-      const hash = await onchain.run({
-        kind: "borrow",
-        stock: stock.symbol,
-        collateral: amount,
-        amount: (borrowAmount * 0.995).toFixed(6),
-      });
+      const hash = await onchain.run(
+        mode === "mint"
+          ? { kind: "psmMint", amount }
+          : { kind: "psmRedeem", amount }
+      );
       setStatus(hash ? "success" : "idle");
       return;
     }
     setTimeout(() => {
-      borrow(borrowAmount, deposit);
+      if (mode === "mint") psmMint(n);
+      else psmRedeem(n);
       setStatus("success");
     }, 1200);
   };
@@ -79,8 +55,8 @@ export default function BorrowPage() {
 
   return (
     <AppLayout
-      title="Borrow sUSD"
-      subtitle="Deposit tokenized stocks as collateral and mint sUSD against them."
+      title="PSM"
+      subtitle="Mint or redeem sUSD 1:1 through the Peg Stability Module."
       kicker="Navigation"
       requiresWallet={false}
     >
@@ -89,23 +65,22 @@ export default function BorrowPage() {
           <div className="grid gap-3 sm:grid-cols-3">
             {[
               {
-                icon: TrendingUp,
-                label: "Collateral value",
-                value: `$${collateral.toFixed(2)}`,
-                sub: "Tokenized equities",
+                icon: Wallet,
+                label: "USDC reserves",
+                value: `$${usdcBalance.toFixed(2)}`,
+                sub: "PSM backing",
               },
               {
-                icon: Activity,
-                label: "Borrowed sUSD",
-                value: `$${debt.toFixed(2)}`,
-                sub: "Outstanding debt",
+                icon: ArrowRightLeft,
+                label: "sUSD supply",
+                value: `$${susdBalance.toFixed(2)}`,
+                sub: "Your liquid balance",
               },
               {
-                icon: Shield,
-                label: "Health factor",
-                value: healthValue,
-                sub: `Min. ${liquidationThreshold}%`,
-                health: debt > 0 ? (collateral / debt) * 100 : undefined,
+                icon: RefreshCcw,
+                label: "Peg",
+                value: "$1.000",
+                sub: "Target price",
               },
             ].map((m) => (
               <div
@@ -118,7 +93,7 @@ export default function BorrowPage() {
                   </div>
                   <p className="text-xs text-muted">{m.label}</p>
                 </div>
-                <p className={`mt-2 text-xl font-semibold ${m.health !== undefined ? healthColorClass(m.health) : "text-foreground"}`}>
+                <p className="mt-2 text-xl font-semibold text-foreground">
                   {m.value}
                 </p>
                 <p className="text-[10px] text-muted">{m.sub}</p>
@@ -131,49 +106,43 @@ export default function BorrowPage() {
             <div className="relative space-y-6">
               <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-background/60 p-4 text-sm text-muted">
                 <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                Choose a tokenized equity asset, deposit it as collateral, and
-                mint sUSD up to the asset&apos;s loan-to-value ratio.
+                The Peg Stability Module lets you mint sUSD 1:1 with USDC, or
+                redeem sUSD back to USDC when reserves are available.
               </div>
 
-              <div>
-                <label className="text-sm font-medium text-foreground">
-                  Collateral asset
-                </label>
-                <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {STOCKS.map((s) => (
-                    <button
-                      key={s.symbol}
-                      onClick={() => {
-                        setStock(s);
-                        setAmount("");
-                      }}
-                      className={`rounded-xl border px-3 py-3 text-left transition ${
-                        stock.symbol === s.symbol
-                          ? "border-primary bg-primary/10"
-                          : "border-border/60 bg-background/60 hover:border-primary/40"
-                      }`}
-                    >
-                      <p className="text-sm font-semibold text-foreground">
-                        {s.symbol}
-                      </p>
-                      <p className="text-[10px] text-muted">{s.name}</p>
-                      <p className="mt-1 text-xs font-medium text-primary">
-                        LTV {(s.ltv * 100).toFixed(0)}%
-                      </p>
-                    </button>
-                  ))}
-                </div>
+              <div className="flex rounded-2xl bg-background p-1">
+                {(
+                  [
+                    { key: "mint", label: "Mint sUSD" },
+                    { key: "redeem", label: "Redeem USDC" },
+                  ] as const
+                ).map((t) => (
+                  <button
+                    key={t.key}
+                    onClick={() => {
+                      setMode(t.key);
+                      reset();
+                    }}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-2 py-3 text-sm font-semibold transition ${
+                      mode === t.key
+                        ? "bg-primary text-primary-foreground shadow-[0_0_16px_-4px_rgba(45,212,191,0.45)]"
+                        : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
               </div>
 
               <div>
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium text-foreground">
-                    Deposit {stock.symbol}
+                    {mode === "mint" ? "Deposit" : "Redeem"}
                   </label>
                   <button
                     type="button"
-                    disabled={maxDeposit <= 0}
-                    onClick={() => setAmount(maxDeposit.toFixed(2))}
+                    disabled={balance <= 0}
+                    onClick={() => setAmount(balance.toFixed(2))}
                     className="text-xs font-semibold text-primary transition hover:text-primary/80 disabled:opacity-50"
                   >
                     MAX
@@ -191,31 +160,34 @@ export default function BorrowPage() {
                     className="flex-1 bg-transparent text-lg font-medium text-foreground outline-none placeholder:text-muted [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <span className="rounded-lg bg-card px-3 py-1 text-sm font-semibold text-foreground">
-                    {stock.symbol}
+                    {paySymbol}
                   </span>
                 </div>
                 <p className="mt-1.5 text-xs text-muted">
-                  Balance: {maxDeposit.toFixed(2)} {stock.symbol}
+                  Balance: {balance.toFixed(2)} {paySymbol}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-border/60 bg-background/60 p-4 text-sm text-muted">
-                <div className="flex items-center justify-between">
-                  <span>You borrow</span>
-                  <span className="font-semibold text-foreground">
-                    {borrowAmount.toFixed(2)} sUSD
-                  </span>
+              <div className="flex justify-center">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-background/60">
+                  {mode === "mint" ? (
+                    <ArrowRightLeft className="h-4 w-4 text-primary" />
+                  ) : (
+                    <RefreshCcw className="h-4 w-4 text-primary" />
+                  )}
                 </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <span>Health after borrow</span>
-                  <span className={`font-semibold ${newHealth > 0 ? healthColorClass(newHealth) : "text-foreground"}`}>
-                    {newHealth > 0 ? `${newHealth.toFixed(0)}%` : "—"}
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-foreground">
+                  Receive
+                </label>
+                <div className="mt-2 flex items-center justify-between rounded-xl border border-border/60 bg-background/60 px-4 py-3">
+                  <span className="text-lg font-medium text-foreground">
+                    {amount || "0.00"}
                   </span>
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <span>Liquidation threshold</span>
-                  <span className="font-semibold text-foreground">
-                    {liquidationThreshold}%
+                  <span className="rounded-lg bg-card px-3 py-1 text-sm font-semibold text-foreground">
+                    {receiveSymbol}
                   </span>
                 </div>
               </div>
@@ -225,7 +197,11 @@ export default function BorrowPage() {
                 onClick={handleSubmit}
                 className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-[0_0_20px_-6px_rgba(45,212,191,0.35)] transition hover:bg-primary/90 hover:shadow-[0_0_28px_-4px_rgba(45,212,191,0.5)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {status === "pending" ? "Confirming..." : "Borrow sUSD"}
+                {status === "pending"
+                  ? "Confirming..."
+                  : mode === "mint"
+                  ? "Mint sUSD"
+                  : "Redeem USDC"}
               </button>
 
               <ModeNote live={live} />
@@ -238,11 +214,11 @@ export default function BorrowPage() {
                       <CheckCircle2 className="h-5 w-5 text-primary" />
                       <div>
                         <p className="text-sm font-semibold text-primary">
-                          {live ? "Borrow confirmed" : "Borrow simulated"}
+                          {mode === "mint" ? "PSM mint complete" : "PSM redeem complete"}
                         </p>
                         <p className="mt-1 text-sm text-muted">
-                          Deposited {deposit.toFixed(2)} {stock.symbol} →{" "}
-                          {borrowAmount.toFixed(2)} sUSD
+                          {n.toFixed(2)} {paySymbol} → {n.toFixed(2)}{" "}
+                          {receiveSymbol}
                         </p>
                       </div>
                     </div>
@@ -263,24 +239,20 @@ export default function BorrowPage() {
         <aside className="space-y-4">
           <div className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur">
             <h3 className="text-sm font-semibold text-foreground">
-              Borrow parameters
+              PSM parameters
             </h3>
             <div className="mt-4 space-y-3 text-sm text-muted">
               <div className="flex items-center justify-between">
-                <span>Selected LTV</span>
-                <span className="font-semibold text-foreground">
-                  {(stock.ltv * 100).toFixed(0)}%
-                </span>
+                <span>Mint fee</span>
+                <span className="font-semibold text-foreground">0.00%</span>
               </div>
               <div className="flex items-center justify-between">
-                <span>Stability fee</span>
-                <span className="font-semibold text-foreground">3.5% APR</span>
+                <span>Redeem fee</span>
+                <span className="font-semibold text-foreground">0.10%</span>
               </div>
               <div className="flex items-center justify-between">
-                <span>Liquidation threshold</span>
-                <span className="font-semibold text-foreground">
-                  {liquidationThreshold}%
-                </span>
+                <span>Peg</span>
+                <span className="font-semibold text-foreground">1:1</span>
               </div>
             </div>
           </div>

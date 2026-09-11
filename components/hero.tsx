@@ -67,12 +67,12 @@ export function Hero() {
               StockFlow
             </p>
 
-            <h1 className="mt-6 font-sans text-4xl font-medium leading-[1.05] tracking-tight sm:text-5xl lg:text-7xl">
+            <h1 className="mt-6 text-balance font-sans text-4xl font-medium leading-[1.08] tracking-tight sm:text-5xl lg:text-7xl">
               Where stocks become{" "}
               <span className="italic text-primary">stable dollars.</span>
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-muted lg:text-xl">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-muted lg:text-xl">
               sUSD is backed by tokenized equities and reserves. Stake into
               ssUSD to earn variable protocol revenue — transparent and on
               chain.
@@ -97,7 +97,7 @@ export function Hero() {
             <div className="mt-10 grid grid-cols-3 gap-4 border-t border-border/60 pt-8">
               {heroStats.map((s) => (
                 <div key={s.label}>
-                  <p className="text-2xl font-semibold text-foreground sm:text-3xl">
+                  <p className="text-2xl font-semibold text-primary sm:text-3xl">
                     {s.value}
                   </p>
                   <p className="mt-1 text-xs font-medium text-muted">{s.label}</p>

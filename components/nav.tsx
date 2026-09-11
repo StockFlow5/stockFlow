@@ -38,16 +38,17 @@ export function Nav() {
 
         <div className="hidden items-center gap-8 md:flex">
           {links.map((link) => {
-            const active = link.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(link.href.split("#")[0]);
+            const base = link.href.split("#")[0] || link.href;
+            const active = base === "/" ? pathname === "/" : pathname.startsWith(base);
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
                   "relative text-sm font-medium transition-colors",
-                  active ? "text-foreground" : "text-muted hover:text-foreground"
+                  active
+                    ? "text-foreground after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-primary"
+                    : "text-muted hover:text-foreground"
                 )}
               >
                 {link.label}
@@ -79,20 +80,22 @@ export function Nav() {
         <div className="border-b border-border bg-background/95 px-4 pb-4 backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-4">
             {links.map((link) => {
-              const active = link.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(link.href.split("#")[0]);
+              const base = link.href.split("#")[0] || link.href;
+              const active = base === "/" ? pathname === "/" : pathname.startsWith(base);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "text-sm font-medium transition-colors",
-                    active ? "text-foreground" : "text-muted hover:text-foreground"
+                    "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                    active
+                      ? "bg-primary/10 text-foreground"
+                      : "text-muted hover:bg-card hover:text-foreground"
                   )}
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
+                  {active && <span className="h-2 w-2 rounded-full bg-primary" />}
                 </Link>
               );
             })}

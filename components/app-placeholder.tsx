@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useAccount } from "wagmi";
 import {
   TrendingUp,
@@ -62,12 +63,20 @@ export function AppPlaceholder({
           </ul>
         )}
 
-        {!isConnected && (
-          <div className="mt-8 flex flex-col items-center gap-3">
-            <p className="text-sm text-muted">Connect your wallet to use this feature.</p>
-            <WalletButton />
-          </div>
-        )}
+        <div className="mt-8 flex flex-col items-center gap-3">
+          {!isConnected && (
+            <>
+              <p className="text-sm text-muted">Connect your wallet to use this feature.</p>
+              <WalletButton />
+            </>
+          )}
+          <Link
+            href="/app/"
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-background/60 px-5 text-sm font-semibold text-foreground transition hover:bg-background"
+          >
+            Open dashboard
+          </Link>
+        </div>
       </div>
     </section>
   );

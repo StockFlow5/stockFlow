@@ -1,30 +1,41 @@
 "use client";
 
-import { Activity, Landmark, PiggyBank, TrendingUp } from "lucide-react";
-
-type ActivityType = "mint" | "borrow" | "stake";
-
-export interface ActivityItem {
-  type: ActivityType;
-  amount: string;
-  receive: string;
-  timestamp: number;
-}
+import {
+  Activity,
+  Landmark,
+  PiggyBank,
+  TrendingUp,
+  Lock,
+  Unlock,
+  RefreshCcw,
+  ArrowRightLeft,
+} from "lucide-react";
+import { type ActivityItem, type ActivityType } from "./simulation-context";
 
 interface RecentActivityProps {
   activities: ActivityItem[];
 }
 
-const icons = {
+const icons: Record<ActivityType, typeof Activity> = {
   mint: Landmark,
   borrow: TrendingUp,
   stake: PiggyBank,
+  vault: PiggyBank,
+  lock: Lock,
+  unlock: Unlock,
+  psm: RefreshCcw,
+  redeem: ArrowRightLeft,
 };
 
 const labels: Record<ActivityType, string> = {
   mint: "Minted sUSD",
   borrow: "Borrowed sUSD",
   stake: "Staked sUSD",
+  vault: "Vault deposit",
+  lock: "Locked $SF",
+  unlock: "Unlocked $SF",
+  psm: "PSM mint sUSD",
+  redeem: "PSM redeem USDC",
 };
 
 export function RecentActivity({ activities }: RecentActivityProps) {

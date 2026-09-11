@@ -10,12 +10,20 @@ import {
   RefreshCcw,
   CheckCircle2,
 } from "lucide-react";
+import { ModeNote, TxStatus } from "./tx-panel";
+import type { TxState } from "@/lib/onchain";
 
 export type Tab = "mint" | "stake" | "borrow";
 
 export interface DappInterfaceProps {
   balances?: Record<Tab, number>;
+  defaultTab?: Tab;
+  showTabs?: boolean;
   onSimulate?: (tab: Tab, amount: string, receive: string) => void;
+  live?: boolean;
+  tx?: TxState;
+  onExecute?: (tab: Tab, amount: string) => Promise<boolean>;
+  onReset?: () => void;
 }
 
 const tabs: { key: Tab; label: string; icon: typeof PiggyBank }[] = [
@@ -48,8 +56,17 @@ const tabInfo = {
   },
 };
 
-export function DappInterface({ balances, onSimulate }: DappInterfaceProps) {
-  const [tab, setTab] = useState<Tab>("mint");
+export function DappInterface({
+  balances,
+  defaultTab = "mint",
+  showTabs = true,
+  onSimulate,
+  live = false,
+  tx,
+  onExecute,
+  onReset,
+}: DappInterfaceProps) {
+  const [tab, setTab] = useState<Tab>(defaultTab);
   const balance = balances?.[tab] ?? 0;
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState<"idle" | "pending" | "success">("idle");
@@ -57,12 +74,18 @@ export function DappInterface({ balances, onSimulate }: DappInterfaceProps) {
     null
   );
 
-  const active = tabInfo[tab];
+  const active =
+    live && tab === "borrow"
+      ? { ...tabInfo.borrow, asset: "AAPLx" }
+      : live && tab === "mint"
+      ? { ...tabInfo.mint, asset: "USDC" }
+      : tabInfo[tab];
 
   const reset = () => {
     setStatus("idle");
     setResult(null);
     setAmount("");
+    onReset?.();
   };
 
   const selectTab = (key: Tab) => {
@@ -74,10 +97,16 @@ export function DappInterface({ balances, onSimulate }: DappInterfaceProps) {
   const amountNum = parseFloat(amount) || 0;
   const canSubmit = amountNum > 0 && amountNum <= balance && status !== "pending";
 
-  const handleAction = () => {
+  const handleAction = async () => {
     if (!canSubmit) return;
     setStatus("pending");
     setResult(null);
+    if (live && onExecute) {
+      const ok = await onExecute(tab, amount);
+      if (ok) setResult({ amount, receive: active.receive });
+      setStatus(ok ? "success" : "idle");
+      return;
+    }
     setTimeout(() => {
       setResult({ amount, receive: active.receive });
       onSimulate?.(tab, amount, active.receive);
@@ -89,24 +118,26 @@ export function DappInterface({ balances, onSimulate }: DappInterfaceProps) {
     <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-card/60 backdrop-blur">
       <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
 
-      <div className="relative border-b border-border/60 bg-background/40 p-2 sm:p-3">
-        <div className="flex rounded-2xl bg-background p-1">
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => selectTab(t.key)}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-2 py-3 text-xs font-semibold transition sm:px-4 sm:text-sm ${
-                tab === t.key
-                  ? "bg-primary text-primary-foreground shadow-[0_0_16px_-4px_rgba(45,212,191,0.45)]"
-                  : "text-muted hover:text-foreground"
-              }`}
-            >
-              <t.icon className="h-4 w-4" />
-              {t.label}
-            </button>
-          ))}
+      {showTabs && (
+        <div className="relative border-b border-border/60 bg-background/40 p-2 sm:p-3">
+          <div className="flex rounded-2xl bg-background p-1">
+            {tabs.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => selectTab(t.key)}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-2 py-3 text-xs font-semibold transition sm:px-4 sm:text-sm ${
+                  tab === t.key
+                    ? "bg-primary text-primary-foreground shadow-[0_0_16px_-4px_rgba(45,212,191,0.45)]"
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                <t.icon className="h-4 w-4" />
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="relative p-5 sm:p-6">
         <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-background/60 p-4 text-sm text-muted">
@@ -180,9 +211,10 @@ export function DappInterface({ balances, onSimulate }: DappInterfaceProps) {
           {status === "pending" ? "Confirming..." : active.action}
         </button>
 
-        <p className="mt-3 text-center text-xs text-muted">
-          No real transaction is executed — this is a UI simulation.
-        </p>
+        <div className="mt-3 space-y-3">
+          <ModeNote live={live} />
+          {live && tx && <TxStatus tx={tx} />}
+        </div>
 
         {status === "success" && result && (
           <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/10 p-5">
@@ -191,7 +223,7 @@ export function DappInterface({ balances, onSimulate }: DappInterfaceProps) {
                 <CheckCircle2 className="h-5 w-5 text-primary" />
                 <div>
                   <p className="text-sm font-semibold text-primary">
-                    Simulated {active.title.toLowerCase()}
+                    {live ? "Confirmed" : "Simulated"} {active.title.toLowerCase()}
                   </p>
                   <p className="mt-1 text-sm text-muted">
                     {tab === "stake"

@@ -3,16 +3,16 @@
 :root {
   --background: #090c14;
   --foreground: #f8fafc;
-  --card: #10152a;
+  --card: #0c1220;
   --card-foreground: #f8fafc;
-  --muted: #8a93a8;
+  --muted: #8b95ab;
   --accent: #f59e0b;
   --accent-foreground: #020617;
   --primary: #2dd4bf;
   --primary-foreground: #020617;
   --border: #1e293b;
   --ring: #2dd4bf;
-  --glow: rgba(45, 212, 191, 0.22);
+  --glow: rgba(45, 212, 191, 0.20);
 }
 
 @theme inline {
@@ -38,14 +38,19 @@ html {
 
 body {
   background:
-    radial-gradient(circle at 120% -20%, rgba(45, 212, 191, 0.10) 0%, transparent 32%),
-    radial-gradient(circle at -10% 120%, rgba(245, 158, 11, 0.07) 0%, transparent 28%),
-    linear-gradient(rgba(248, 250, 252, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(248, 250, 252, 0.02) 1px, transparent 1px),
+    radial-gradient(1200px circle at 50% -10%, rgba(45, 212, 191, 0.09) 0%, transparent 40%),
+    radial-gradient(1000px circle at 50% 115%, rgba(245, 158, 11, 0.06) 0%, transparent 35%),
+    linear-gradient(rgba(248, 250, 252, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(248, 250, 252, 0.015) 1px, transparent 1px),
     var(--background);
   background-size: 100% 100%, 100% 100%, 56px 56px, 56px 56px, 100% 100%;
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background-color: rgba(45, 212, 191, 0.25);
+  color: var(--foreground);
 }
 
 /* Ticker marquee */
