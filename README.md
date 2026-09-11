@@ -1,5 +1,7 @@
 # StockFlow
 
+<p align="center"><img src="public/banner.png" alt="StockFlow banner" width="100%"></p>
+
 **sUSD — a dollar stablecoin backed by tokenized stocks on Robinhood Chain.**
 
 Live app: https://stockflowapp.fun · X: https://x.com/Stockflowfun
@@ -7,6 +9,18 @@ Live app: https://stockflowapp.fun · X: https://x.com/Stockflowfun
 StockFlow lets holders of tokenized equities (xStocks such as SPYx, QQQx, AAPLx, MSFTx, GOOGLx, NVDAx, TSLAx) unlock liquidity without selling. Deposit stocks as collateral, mint **sUSD**, stake it for **ssUSD** yield, and take part in governance with **$SF**.
 
 The protocol is currently live on **Robinhood Chain Testnet** (chain ID `46630`) with real on-chain transactions.
+
+---
+
+## Screenshots
+
+| Landing page | Dashboard |
+| --- | --- |
+| ![Landing](docs/screenshots/landing.png) | ![Dashboard](docs/screenshots/dashboard.png) |
+
+| PSM (mint / redeem) | Borrow | Vaults |
+| --- | --- | --- |
+| ![PSM](docs/screenshots/psm.png) | ![Borrow](docs/screenshots/borrow.png) | ![Vaults](docs/screenshots/vaults.png) |
 
 ---
 
