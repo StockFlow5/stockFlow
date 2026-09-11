@@ -1,14 +1,13 @@
 {
-  "name": "contracts",
+  "name": "stockflow-contracts",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "hardhat compile",
+    "deploy:testnet": "hardhat run --network robinhoodTestnet scripts/deploy.ts",
+    "e2e:testnet": "hardhat run --network robinhoodTestnet scripts/e2e.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "license": "MIT",
+  "description": "StockFlow protocol contracts (Robinhood Chain)",
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^4.0.15",
     "@nomicfoundation/hardhat-verify": "^3.1.0",
@@ -16,5 +15,6 @@
     "dotenv": "^17.4.2",
     "hardhat": "^3.16.0"
   },
-  "type": "module"
+  "type": "module",
+  "private": true
 }
