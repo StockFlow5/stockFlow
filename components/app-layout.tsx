@@ -48,7 +48,7 @@ const nav = [
 const company = [
   { label: "Docs", href: "/docs", icon: FileText },
   { label: "GitHub", href: "https://github.com/StockFlow5/app", icon: Code },
-  { label: "X", href: "https://x.com/_StockFlow", icon: X },
+  { label: "X", href: "https://x.com/StockFlowfun", icon: X },
 ];
 
 interface AppLayoutProps {
