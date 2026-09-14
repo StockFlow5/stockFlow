@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AppLayout } from "@/components/app-layout";
-import { AppPlaceholder } from "@/components/app-placeholder";
-
+import { StatsContent } from "@/components/stats-content";
 
 export const metadata: Metadata = {
   title: "StockFlow App | Stats",
@@ -13,20 +12,11 @@ export default function StatsPage() {
   return (
     <AppLayout
       title="Stats"
-      subtitle="Real-time protocol metrics and TVL."
+      subtitle="Live protocol metrics from Robinhood Chain Testnet."
       kicker="Protocol"
       requiresWallet={false}
     >
-      <AppPlaceholder
-        icon="BarChart3"
-        heading="Protocol statistics"
-        description="Track total value locked, sUSD supply, backing reserves, and vault APY. Data refreshes on-chain as positions open and close."
-        bullets={[
-          "Total sUSD supply and backing ratio",
-          "Collateral breakdown by token",
-          "Vault APY and protocol revenue",
-        ]}
-      />
+      <StatsContent />
     </AppLayout>
   );
 }
