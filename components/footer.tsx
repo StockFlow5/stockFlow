@@ -13,7 +13,7 @@ const nav = [
 const social = [
   { label: "Docs", href: "/docs", icon: Globe },
   { label: "GitHub", href: "https://github.com/StockFlow5/app", icon: Code },
-  { label: "X", href: "https://x.com/StockFlowfun", icon: X },
+  { label: "X", href: "https://x.com/_StockFlow", icon: X },
 ];
 
 export function Footer() {

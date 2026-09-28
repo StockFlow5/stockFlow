@@ -4,7 +4,7 @@
 
 **sUSD — a dollar stablecoin backed by tokenized stocks on Robinhood Chain.**
 
-Live app: https://stockflowapp.fun · X: https://x.com/StockFlowfun
+Live app: https://stockflowapp.fun · X: https://x.com/_StockFlow
 
 StockFlow lets holders of tokenized equities (xStocks such as SPYx, QQQx, AAPLx, MSFTx, GOOGLx, NVDAx, TSLAx) unlock liquidity without selling. Deposit stocks as collateral, mint **sUSD**, stake it for **ssUSD** yield, and take part in governance with **$SF**.
 
