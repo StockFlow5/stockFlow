@@ -101,6 +101,7 @@ cp .env.example .env         # RH_TESTNET_RPC + DEPLOYER_KEY (never commit this 
 npm run compile
 npm run deploy:testnet       # deploys everything and writes deployed-addresses.json
 npm run e2e:testnet          # runs a full mint → borrow → stake → lock flow on testnet
+npm run verify:testnet       # verifies source code on the Blockscout explorer
 ```
 
 ### Network
@@ -115,18 +116,20 @@ npm run e2e:testnet          # runs a full mint → borrow → stake → lock fl
 
 ### Deployed testnet addresses
 
+All contracts are source-verified on the explorer (click an address to read the code).
+
 | Contract | Address |
 | --- | --- |
-| sUSD | `0xc27296065B9e9679870AbeF08FBfD4F1D197d320` |
-| ssUSD | `0xC5660f6FEb7a7E394c004D473aC05DF8D5E73d61` |
-| SF | `0x3b94D0a52575292c2DF8175Bf83C2a28B9eA9526` |
-| PSM | `0x6A0d24E0F7d4F253c68E5021566062778Fc2DCb4` |
-| Borrow | `0xB999dd76A37cd0032D5C47179709Cb998339A8F2` |
-| StakingVault | `0x6b24f651Cf64471c6baf7a145A2e8284cbC5501d` |
-| SFLock | `0x5C9a13aD498B9D75291245B73f3EB086E4694E75` |
-| MockFaucet | `0xFe5ED0C296bDD376E5fC305E466b0b07967a80E7` |
-| Mock USDC | `0x3d66CF6DF47481B00D055e660F340b3957C6c7Ff` |
-| Mock USDG | `0x3900AdaE205dC19156905A45CB6CF0B9Ea40D9bF` |
+| sUSD | [`0xc27296065B9e9679870AbeF08FBfD4F1D197d320`](https://explorer.testnet.chain.robinhood.com/address/0xc27296065B9e9679870AbeF08FBfD4F1D197d320#code) |
+| ssUSD | [`0xC5660f6FEb7a7E394c004D473aC05DF8D5E73d61`](https://explorer.testnet.chain.robinhood.com/address/0xC5660f6FEb7a7E394c004D473aC05DF8D5E73d61#code) |
+| SF | [`0x3b94D0a52575292c2DF8175Bf83C2a28B9eA9526`](https://explorer.testnet.chain.robinhood.com/address/0x3b94D0a52575292c2DF8175Bf83C2a28B9eA9526#code) |
+| PSM | [`0x6A0d24E0F7d4F253c68E5021566062778Fc2DCb4`](https://explorer.testnet.chain.robinhood.com/address/0x6A0d24E0F7d4F253c68E5021566062778Fc2DCb4#code) |
+| Borrow | [`0xB999dd76A37cd0032D5C47179709Cb998339A8F2`](https://explorer.testnet.chain.robinhood.com/address/0xB999dd76A37cd0032D5C47179709Cb998339A8F2#code) |
+| StakingVault | [`0x6b24f651Cf64471c6baf7a145A2e8284cbC5501d`](https://explorer.testnet.chain.robinhood.com/address/0x6b24f651Cf64471c6baf7a145A2e8284cbC5501d#code) |
+| SFLock | [`0x5C9a13aD498B9D75291245B73f3EB086E4694E75`](https://explorer.testnet.chain.robinhood.com/address/0x5C9a13aD498B9D75291245B73f3EB086E4694E75#code) |
+| MockFaucet | [`0xFe5ED0C296bDD376E5fC305E466b0b07967a80E7`](https://explorer.testnet.chain.robinhood.com/address/0xFe5ED0C296bDD376E5fC305E466b0b07967a80E7#code) |
+| Mock USDC | [`0x3d66CF6DF47481B00D055e660F340b3957C6c7Ff`](https://explorer.testnet.chain.robinhood.com/address/0x3d66CF6DF47481B00D055e660F340b3957C6c7Ff#code) |
+| Mock USDG | [`0x3900AdaE205dC19156905A45CB6CF0B9Ea40D9bF`](https://explorer.testnet.chain.robinhood.com/address/0x3900AdaE205dC19156905A45CB6CF0B9Ea40D9bF#code) |
 
 xStock mocks and price feeds are listed in [`contracts/deployed-addresses.json`](contracts/deployed-addresses.json).
 

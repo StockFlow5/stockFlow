@@ -17,10 +17,27 @@ export default defineConfig({
     cache: "./cache",
     artifacts: "./artifacts",
   },
+  verify: {
+    etherscan: { enabled: false },
+    blockscout: { enabled: true },
+  },
+  chainDescriptors: {
+    46630: {
+      name: "Robinhood Chain Testnet",
+      blockExplorers: {
+        blockscout: {
+          name: "Robinhood Testnet Explorer",
+          url: "https://explorer.testnet.chain.robinhood.com",
+          apiUrl: "https://explorer.testnet.chain.robinhood.com/api",
+        },
+      },
+    },
+  },
   networks: {
     robinhoodTestnet: {
       type: "http",
       chainType: "l1",
+      chainId: 46630,
       url: configVariable("RH_TESTNET_RPC"),
       accounts: [configVariable("DEPLOYER_KEY")],
       ethers: {
