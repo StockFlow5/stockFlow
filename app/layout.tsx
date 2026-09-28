@@ -15,28 +15,47 @@ const serif = Newsreader({
   weight: ["400", "500", "600"],
 });
 
+const SITE = "https://stockflowapp.fun";
+const TITLE = "StockFlow | Where stocks become stable dollars";
+const DESCRIPTION =
+  "Unlock liquidity from tokenized stocks without selling. Deposit xStocks on Robinhood Chain, mint sUSD, stake for yield, and lock $SF for governance.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://stockflowapp.fun"),
-  title: "StockFlow | Where stocks become stable dollars",
-  description:
-    "Mint sUSD by depositing tokenized equities on Robinhood Chain. Transparent, on-chain collateral. Earn yield by staking.",
+  metadataBase: new URL(SITE),
+  title: { default: TITLE, template: "%s | StockFlow" },
+  description: DESCRIPTION,
+  applicationName: "StockFlow",
+  keywords: [
+    "StockFlow",
+    "sUSD",
+    "stablecoin",
+    "tokenized stocks",
+    "xStocks",
+    "Robinhood Chain",
+    "DeFi",
+    "borrow against stocks",
+  ],
   icons: {
     icon: "/profile.png",
     apple: "/profile.png",
   },
   openGraph: {
-    title: "StockFlow | Where stocks become stable dollars",
-    description:
-      "A stable dollar backed by tokenized stocks. Deposit equities, mint sUSD, and earn protocol revenue.",
-    images: ["/banner.png"],
+    type: "website",
+    url: SITE,
+    siteName: "StockFlow",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "StockFlow" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StockFlow | Where stocks become stable dollars",
-    description:
-      "A stable dollar backed by tokenized stocks. Deposit equities, mint sUSD, and earn protocol revenue.",
-    images: ["/banner.png"],
+    site: "@_StockFlow",
+    creator: "@_StockFlow",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og.png"],
   },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -50,6 +69,20 @@ export default function RootLayout({
       className={`${sans.variable} ${serif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "StockFlow",
+              url: SITE,
+              logo: `${SITE}/profile.png`,
+              description: DESCRIPTION,
+              sameAs: ["https://x.com/_StockFlow", "https://github.com/StockFlow5/stockFlow"],
+            }),
+          }}
+        />
         <Providers>{children}</Providers>
       </body>
     </html>

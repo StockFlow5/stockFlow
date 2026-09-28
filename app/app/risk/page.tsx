@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/app-layout";
 import { RiskContent } from "@/components/risk-content";
 
 export const metadata: Metadata = {
-  title: "StockFlow App | Risk",
+  title: "Risk",
   description:
     "Protocol risk parameters, collateral factors, and liquidation mechanics.",
 };

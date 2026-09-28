@@ -4,7 +4,7 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "StockFlow Docs",
+  title: "Docs",
   description:
     "Documentation for StockFlow: a stable dollar backed by tokenized equities on Robinhood Chain.",
 };

@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer";
 import { Check, Circle, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "StockFlow Roadmap",
+  title: "Roadmap",
   description:
     "StockFlow protocol roadmap: testnet, mainnet, integrations, and governance.",
 };

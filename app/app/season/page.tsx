@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/app-layout";
 import { SeasonContent } from "@/components/season-content";
 
 export const metadata: Metadata = {
-  title: "StockFlow App | Season 1",
+  title: "Season 1",
   description:
     "Season 1 rewards, quests, and early-user incentives for StockFlow.",
 };

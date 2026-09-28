@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/app-layout";
 import { StatsContent } from "@/components/stats-content";
 
 export const metadata: Metadata = {
-  title: "StockFlow App | Stats",
+  title: "Stats",
   description:
     "Real-time protocol statistics for TVL, sUSD supply, collateral, and vault yield.",
 };

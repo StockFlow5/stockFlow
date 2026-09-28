@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/app-layout";
 import { DashboardContent } from "@/components/dashboard-content";
 
 export const metadata: Metadata = {
-  title: "StockFlow App | Overview",
+  title: "App",
   description:
     "Deposit tokenized equities and mint sUSD, or stake into ssUSD to earn protocol revenue.",
 };
