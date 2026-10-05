@@ -22,6 +22,16 @@ export default defineConfig({
     blockscout: { enabled: true },
   },
   chainDescriptors: {
+    4663: {
+      name: "Robinhood Chain",
+      blockExplorers: {
+        blockscout: {
+          name: "Robinhood Chain Explorer",
+          url: "https://robinhoodchain.blockscout.com",
+          apiUrl: "https://robinhoodchain.blockscout.com/api",
+        },
+      },
+    },
     46630: {
       name: "Robinhood Chain Testnet",
       blockExplorers: {
@@ -34,6 +44,16 @@ export default defineConfig({
     },
   },
   networks: {
+    robinhoodMainnet: {
+      type: "http",
+      chainType: "l1",
+      chainId: 4663,
+      url: configVariable("RH_MAINNET_RPC"),
+      accounts: [configVariable("DEPLOYER_KEY")],
+      ethers: {
+        waitForTransactionReceipt: true,
+      },
+    },
     robinhoodTestnet: {
       type: "http",
       chainType: "l1",

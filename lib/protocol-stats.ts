@@ -3,20 +3,19 @@
 import { useAccount, useReadContracts } from "wagmi";
 import { formatEther, type Address } from "viem";
 import {
-  ADDRESSES,
   BORROW_ABI,
   MOCKERC20_ABI,
   SFLOCK_ABI,
   STAKINGVAULT_ABI,
-  TESTNET_CHAIN_ID,
   type StockSymbol,
 } from "./contracts";
+import { ADDRESSES, CHAIN_ID, STOCK_SYMBOLS, stockAddress } from "./network";
 
-const chainId = TESTNET_CHAIN_ID;
+export { STOCK_SYMBOLS };
+const chainId = CHAIN_ID;
 const ZERO = "0x0000000000000000000000000000000000000000" as Address;
 const toNum = (v: unknown) => (typeof v === "bigint" ? Number(formatEther(v)) : 0);
 
-export const STOCK_SYMBOLS = Object.keys(ADDRESSES.stocks) as StockSymbol[];
 
 export interface StockStats {
   symbol: StockSymbol;
@@ -50,7 +49,7 @@ export function useProtocolStats() {
   const G = globalReads.length;
 
   const stockReads = STOCK_SYMBOLS.flatMap((s) => {
-    const a = ADDRESSES.stocks[s];
+    const a = stockAddress(s);
     return [
       balance(a, ADDRESSES.Borrow),
       { address: ADDRESSES.Borrow, abi: BORROW_ABI, functionName: "getAssetPrice", args: [a], chainId } as const,
@@ -84,7 +83,7 @@ export function useProtocolStats() {
     const params = res(base + 2) as readonly [boolean, bigint, bigint] | undefined;
     return {
       symbol,
-      address: ADDRESSES.stocks[symbol],
+      address: stockAddress(symbol),
       price,
       locked,
       lockedValue: locked * price,

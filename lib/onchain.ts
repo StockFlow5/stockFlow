@@ -5,21 +5,20 @@ import { useAccount, useConfig, useReadContracts } from "wagmi";
 import { readContract, waitForTransactionReceipt, writeContract } from "wagmi/actions";
 import { formatEther, parseEther, type Address, type Hash } from "viem";
 import {
-  ADDRESSES,
   BORROW_ABI,
   MOCKERC20_ABI,
   MOCKFAUCET_ABI,
   PSM_ABI,
   SFLOCK_ABI,
   STAKINGVAULT_ABI,
-  TESTNET_CHAIN_ID,
   type StockSymbol,
 } from "./contracts";
+import { ADDRESSES, CHAIN_ID, EXPLORER, STOCK_SYMBOLS, stockAddress } from "./network";
 
-export const EXPLORER = "https://explorer.testnet.chain.robinhood.com";
+export { EXPLORER };
 export const txUrl = (hash: Hash) => `${EXPLORER}/tx/${hash}`;
 
-const chainId = TESTNET_CHAIN_ID;
+const chainId = CHAIN_ID;
 const toNum = (v: bigint | undefined) => (v === undefined ? 0 : Number(formatEther(v)));
 
 export type OnchainAction =
@@ -48,7 +47,7 @@ export function useOnchain() {
   const erc20 = (a: Address) =>
     ({ address: a, abi: MOCKERC20_ABI, functionName: "balanceOf", args: [user], chainId }) as const;
 
-  const stockSymbols = Object.keys(ADDRESSES.stocks) as StockSymbol[];
+  const stockSymbols = STOCK_SYMBOLS;
 
   const borrowRead = (functionName: "getCollateralValue" | "debt" | "getMaxDebt") =>
     ({ address: ADDRESSES.Borrow, abi: BORROW_ABI, functionName, args: [user], chainId }) as const;
@@ -62,7 +61,7 @@ export function useOnchain() {
     borrowRead("getCollateralValue"),
     borrowRead("debt"),
     borrowRead("getMaxDebt"),
-    ...stockSymbols.map((s) => erc20(ADDRESSES.stocks[s])),
+    ...stockSymbols.map((s) => erc20(stockAddress(s))),
   ];
 
   const reads = useReadContracts({
@@ -146,7 +145,7 @@ export function useOnchain() {
           }
           case "borrow": {
             const col = parseEther(action.collateral);
-            const token = ADDRESSES.stocks[action.stock];
+            const token = stockAddress(action.stock);
             if (col > BigInt(0)) {
               await approveIfNeeded(token, ADDRESSES.Borrow, col);
               setTx({ status: "pending" });

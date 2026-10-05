@@ -1,5 +1,6 @@
 "use client";
 
+import { NETWORK } from "@/lib/network";
 import { Shield, Activity, Scale, AlertTriangle } from "lucide-react";
 import { useProtocolStats } from "@/lib/protocol-stats";
 import { cn } from "@/lib/utils";
@@ -100,7 +101,7 @@ export function RiskContent() {
               </div>
             ) : (
               <div className="space-y-3 text-sm text-muted">
-                <p>Connect on Robinhood Chain Testnet to see your live health factor, collateral and debt.</p>
+                <p>Connect on {NETWORK.name} to see your live health factor, collateral and debt.</p>
                 <WalletButton />
               </div>
             )}

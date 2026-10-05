@@ -3,7 +3,7 @@
 import { useSwitchChain } from "wagmi";
 import { Droplets, ExternalLink, AlertTriangle, Radio } from "lucide-react";
 import { useOnchain, txUrl } from "@/lib/onchain";
-import { TESTNET_CHAIN_ID } from "@/lib/contracts";
+import { CHAIN_ID, IS_TESTNET, NETWORK } from "@/lib/network";
 
 type Onchain = ReturnType<typeof useOnchain>;
 
@@ -11,8 +11,8 @@ export function ModeNote({ live }: { live: boolean }) {
   return (
     <p className="text-center text-xs text-muted">
       {live
-        ? "Live on Robinhood Chain Testnet — transactions are real (testnet only)."
-        : "No real transaction is executed — this is a UI simulation. Connect a wallet on Robinhood Testnet for live mode."}
+        ? `Live on ${NETWORK.name} — transactions are real.`
+        : `No real transaction is executed — this is a UI simulation. Connect a wallet on ${NETWORK.shortName} for live mode.`}
     </p>
   );
 }
@@ -60,25 +60,25 @@ export function TestnetPanel({ onchain }: { onchain: Onchain }) {
     <div className="rounded-2xl border border-border/60 bg-card/60 p-5 backdrop-blur">
       <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Radio className={`h-4 w-4 ${live ? "text-emerald-400" : "text-muted"}`} />
-        {live ? "Testnet live" : "Testnet mode"}
+        {live ? `${IS_TESTNET ? "Testnet" : "Mainnet"} live` : IS_TESTNET ? "Testnet mode" : "Simulation mode"}
       </h3>
       <p className="mt-2 text-xs text-muted">
         {live
-          ? "Balances and actions read/write real StockFlow mock contracts on Robinhood Chain Testnet."
+          ? `Balances and actions read/write StockFlow contracts on ${NETWORK.name}.`
           : wrongNetwork
-          ? "Switch your wallet to Robinhood Chain Testnet to use live contracts."
-          : "Connect a wallet on Robinhood Chain Testnet to use live contracts."}
+          ? `Switch your wallet to ${NETWORK.name} to use live contracts.`
+          : `Connect a wallet on ${NETWORK.name} to use live contracts.`}
       </p>
       {wrongNetwork && (
         <button
-          onClick={() => switchChain({ chainId: TESTNET_CHAIN_ID })}
+          onClick={() => switchChain({ chainId: CHAIN_ID })}
           disabled={isPending}
           className="mt-3 w-full rounded-xl border border-primary/40 bg-primary/10 py-2 text-xs font-semibold text-primary transition hover:bg-primary/20 disabled:opacity-50"
         >
-          {isPending ? "Switching..." : "Switch to Robinhood Testnet"}
+          {isPending ? "Switching..." : `Switch to ${NETWORK.shortName}`}
         </button>
       )}
-      {live && (
+      {live && IS_TESTNET && (
         <button
           onClick={() => run({ kind: "faucet" })}
           disabled={busy}

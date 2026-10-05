@@ -1,0 +1,12 @@
+{
+  "_comment": "Copy to mainnet.config.json and fill with REAL Robinhood Chain (4663) addresses. The deploy script refuses placeholders.",
+  "owner": "0xMULTISIG_OR_OWNER",
+  "sfToken": "0xSF_GOVERNANCE_TOKEN",
+  "reserves": {
+    "USDC": "0xUSDC_ON_ROBINHOOD_CHAIN"
+  },
+  "collateral": {
+    "SPYx": { "token": "0xSPYx_TOKEN", "priceFeed": "0xSPYx_CHAINLINK_FEED", "maxLTV": 7000, "liqThreshold": 8000 },
+    "AAPLx": { "token": "0xAAPLx_TOKEN", "priceFeed": "0xAAPLx_CHAINLINK_FEED", "maxLTV": 6500, "liqThreshold": 7500 }
+  }
+}

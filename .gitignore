@@ -41,3 +41,5 @@ next-env.d.ts
 
 # allow example env files
 !.env.example
+contracts/mainnet.config.json
+contracts/deployed-addresses.mainnet.json

@@ -5,7 +5,9 @@
     "compile": "hardhat compile",
     "deploy:testnet": "hardhat run --network robinhoodTestnet scripts/deploy.ts",
     "e2e:testnet": "hardhat run --network robinhoodTestnet scripts/e2e.ts",
-    "verify:testnet": "bash scripts/verify.sh"
+    "verify:testnet": "bash scripts/verify.sh",
+    "deploy:mainnet": "hardhat run --network robinhoodMainnet scripts/deploy-mainnet.ts",
+    "deploy:mainnet:dry": "DRY_RUN=1 hardhat run --network robinhoodMainnet scripts/deploy-mainnet.ts"
   },
   "license": "MIT",
   "description": "StockFlow protocol contracts (Robinhood Chain)",

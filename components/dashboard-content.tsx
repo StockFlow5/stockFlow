@@ -1,5 +1,6 @@
 "use client";
 
+import { NETWORK } from "@/lib/network";
 
 import Link from "next/link";
 import { useAccount } from "wagmi";
@@ -136,7 +137,7 @@ export function DashboardContent() {
               Wallet not connected
             </p>
             <p className="text-sm text-muted">
-              Connect on Robinhood Chain Testnet for live on-chain balances, or simulate below without one.
+              Connect on {NETWORK.name} for live on-chain balances, or simulate below without one.
             </p>
           </div>
           <WalletButton size="sm" variant="outline" />

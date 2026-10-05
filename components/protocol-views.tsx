@@ -1,5 +1,6 @@
 "use client";
 
+import { NETWORK } from "@/lib/network";
 import Link from "next/link";
 import { RefreshCcw, ExternalLink, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -71,7 +72,7 @@ export function LiveBadge({ loading, error, onRefresh }: { loading: boolean; err
         )}
       >
         <span className={cn("h-1.5 w-1.5 rounded-full", error ? "bg-red-400" : "bg-primary", loading && "animate-pulse")} />
-        {error ? "RPC error" : "Live · Robinhood Testnet"}
+        {error ? "RPC error" : `Live · ${NETWORK.shortName}`}
       </span>
       <button
         onClick={onRefresh}

@@ -1,5 +1,6 @@
 "use client";
 
+import { NETWORK } from "@/lib/network";
 import { Landmark, Coins, PiggyBank, Lock, Layers, Percent } from "lucide-react";
 import { useProtocolStats } from "@/lib/protocol-stats";
 import { ADDRESSES } from "@/lib/contracts";
@@ -27,7 +28,7 @@ export function StatsContent() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted">Read directly from StockFlow contracts on Robinhood Chain Testnet. Refreshes every 15s.</p>
+        <p className="text-sm text-muted">Read directly from StockFlow contracts on {NETWORK.name}. Refreshes every 15s.</p>
         <LiveBadge loading={loading} error={s.error} onRefresh={() => s.refetch()} />
       </div>
 

@@ -149,6 +149,15 @@ SF        ──approve──▶ SFLock.lock ──────────▶ v
 
 ---
 
+## Mainnet
+
+Mainnet is **not deployed**. Preparation lives in the repo:
+
+- Hardhat network `robinhoodMainnet` (chainId 4663) + Blockscout verify config.
+- `contracts/scripts/deploy-mainnet.ts` — core-only deploy (no mocks/faucet) driven by `contracts/mainnet.config.json`; validates addresses, decimals and oracle freshness and refuses placeholders. `npm run deploy:mainnet:dry` to check without sending transactions.
+- Frontend network switch via `NEXT_PUBLIC_NETWORK=testnet|mainnet` (`lib/network.ts`, addresses in `lib/addresses.mainnet.json`).
+- Full checklist, including known contract blockers (PSM/USDC decimals, mock oracle, no liquidations): [docs/MAINNET.md](docs/MAINNET.md).
+
 ## Roadmap
 
 1. **Testnet** — core protocol, full dApp, wallet connectivity, real testnet transactions ✔

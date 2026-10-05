@@ -1,5 +1,6 @@
 "use client";
 
+import { NETWORK } from "@/lib/network";
 import Link from "next/link";
 import { Sparkles, Trophy, Coins, PiggyBank, Lock, TrendingUp, CheckCircle2, Circle } from "lucide-react";
 import { useProtocolStats } from "@/lib/protocol-stats";
@@ -90,7 +91,7 @@ export function SeasonContent() {
             </div>
           ) : (
             <div className="space-y-3 text-sm text-muted">
-              <p>Connect on Robinhood Chain Testnet to see your points, tier and quests.</p>
+              <p>Connect on {NETWORK.name} to see your points, tier and quests.</p>
               <WalletButton />
             </div>
           )}
